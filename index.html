@@ -2,19 +2,25 @@
 <html>
 <head>
   <title>Econostrats Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    input, button { margin: 5px 0; padding: 8px; width: 200px; }
+    #errorMsg { color: red; }
+  </style>
 </head>
 <body>
   <h1>Sign In</h1>
 
-  <input id="email" type="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
+  <input id="email" type="email" placeholder="Email"><br>
+  <input id="password" type="password" placeholder="Password"><br>
 
   <button id="emailLoginBtn">Login</button>
   <button id="emailSignupBtn">Sign Up</button><br><br>
 
   <button id="googleBtn">Sign in with Google</button>
 
-  <!-- IMPORTANT: this must be type="module" -->
+  <p id="errorMsg"></p>
+
   <script type="module" src="auth.js"></script>
 </body>
 </html>
