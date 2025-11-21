@@ -8,7 +8,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-// Firebase config
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
   authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -31,59 +31,51 @@ const errorMsg = document.getElementById("errorMsg");
 
 // Redirect if already signed in
 onAuthStateChanged(auth, user => {
-  if (user) {
-    window.location.href = "game.html";
-  }
+  if (user) window.location.href = "game.html";
 });
+
+// Helper: display error safely
+function showError(msg) {
+  if (errorMsg) errorMsg.textContent = msg;
+}
 
 // GOOGLE SIGN-IN
 document.getElementById("googleBtn").addEventListener("click", async () => {
-  if (!errorMsg) return;
-  errorMsg.textContent = "";
+  showError("");
   try {
     await signInWithPopup(auth, provider);
-    // onAuthStateChanged handles redirect
+    // Redirect handled by onAuthStateChanged
   } catch (err) {
-    errorMsg.textContent = err.message;
+    showError(err.message);
   }
 });
 
 // EMAIL LOGIN
 document.getElementById("emailLoginBtn").addEventListener("click", async () => {
-  if (!errorMsg) return;
-  errorMsg.textContent = "";
-
+  showError("");
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-  if (!email || !password) {
-    errorMsg.textContent = "Enter both email and password.";
-    return;
-  }
+  if (!email || !password) return showError("Enter both email and password.");
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged handles redirect
+    // Redirect handled by onAuthStateChanged
   } catch (err) {
-    errorMsg.textContent = err.message;
+    showError(err.message);
   }
 });
 
 // EMAIL SIGNUP
 document.getElementById("emailSignupBtn").addEventListener("click", async () => {
-  if (!errorMsg) return;
-  errorMsg.textContent = "";
-
+  showError("");
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
-  if (!email || !password) {
-    errorMsg.textContent = "Enter both email and password.";
-    return;
-  }
+  if (!email || !password) return showError("Enter both email and password.");
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged handles redirect
+    // Redirect handled by onAuthStateChanged
   } catch (err) {
-    errorMsg.textContent = err.message;
+    showError(err.message);
   }
 });
