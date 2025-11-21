@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Account</title>
+
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #222;
+      padding: 25px;
+      border-radius: 12px;
+      width: 320px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,.5);
+    }
+    button {
+      width: 90%;
+      padding: 10px;
+      margin-top: 15px;
+      border-radius: 10px;
+      border: none;
+      background: #DB4437;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #c33b2f; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Your Account</h2>
+    <p id="username"></p>
+    <button id="logout">Logout</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
+      authDomain: "econostrats-5a73a.firebaseapp.com",
+      projectId: "econostrats-5a73a",
+      storageBucket: "econostrats-5a73a.firebasestorage.app",
+      messagingSenderId: "766599325060",
+      appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
+      measurementId: "G-0CLV0PR5V2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const username = document.getElementById("username");
+
+    // Check login state
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        username.innerText = "Logged in as: " + user.email;
+      } else {
+        window.location = "login.html"; // send back if logged out
+      }
+    });
+
+    // Logout
+    document.getElementById("logout").onclick = () => {
+      signOut(auth).then(() => {
+        window.location = "login.html";
+      });
+    };
+  </script>
+
+</body>
+</html>

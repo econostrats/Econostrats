@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <style>
+    body {
+      background: #111;
+      color: #eee;
+      font-family: Arial;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: #222;
+      padding: 25px;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,.5);
+    }
+    input, button {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover { background: #45a049; }
+    .google-btn { background: #DB4437; }
+    .google-btn:hover { background: #c33b2f; }
+    .signup-btn { background: #0078ff; }
+    .signup-btn:hover { background: #0069dd; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Login</h2>
+
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button id="emailLogin">Login</button>
+
+    <button class="signup-btn" id="signup">Sign Up</button>
+
+    <button class="google-btn" id="googleLogin">Sign in with Google</button>
+
+    <p id="status"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      createUserWithEmailAndPassword
+    } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
+      authDomain: "econostrats-5a73a.firebaseapp.com",
+      projectId: "econostrats-5a73a",
+      storageBucket: "econostrats-5a73a.firebasestorage.app",
+      messagingSenderId: "766599325060",
+      appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
+      measurementId: "G-0CLV0PR5V2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const auth = getAuth(app);
+
+    const status = document.getElementById("status");
+
+    // LOGIN
+    document.getElementById("emailLogin").onclick = () => {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      signInWithEmailAndPassword(auth, email, pass)
+      .then(() => {
+        window.location = "account.html";
+      })
+      .catch(err => status.innerText = err.message);
+    };
+
+    // SIGNUP
+    document.getElementById("signup").onclick = () => {
+      const email = document.getElementById("email").value;
+      const pass = document.getElementById("password").value;
+
+      createUserWithEmailAndPassword(auth, email, pass)
+      .then(() => {
+        window.location = "account.html";
+      })
+      .catch(err => status.innerText = err.message);
+    };
+
+    // GOOGLE LOGIN
+    document.getElementById("googleLogin").onclick = () => {
+      const provider = new GoogleAuthProvider();
+
+      signInWithPopup(auth, provider)
+      .then(() => {
+        window.location = "account.html";
+      })
+      .catch(err => status.innerText = err.message);
+    };
+  </script>
+</body>
+</html>
