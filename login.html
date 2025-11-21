@@ -43,81 +43,91 @@
   </style>
 </head>
 <body>
+
   <div class="card">
     <h2>Login</h2>
 
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
+
     <button id="emailLogin">Login</button>
-
     <button class="signup-btn" id="signup">Sign Up</button>
-
     <button class="google-btn" id="googleLogin">Sign in with Google</button>
 
     <p id="status"></p>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
-    import {
-      getAuth,
-      signInWithEmailAndPassword,
-      GoogleAuthProvider,
-      signInWithPopup,
-      createUserWithEmailAndPassword
-    } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-analytics.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
+    createUserWithEmailAndPassword,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
-      authDomain: "econostrats-5a73a.firebaseapp.com",
-      projectId: "econostrats-5a73a",
-      storageBucket: "econostrats-5a73a.firebasestorage.app",
-      messagingSenderId: "766599325060",
-      appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
-      measurementId: "G-0CLV0PR5V2"
-    };
+  // *** FIXED CONFIG ***
+  const firebaseConfig = {
+    apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
+    authDomain: "econostrats-5a73a.firebaseapp.com",
+    projectId: "econostrats-5a73a",
+    storageBucket: "econostrats-5a73a.appspot.com",
+    messagingSenderId: "766599325060",
+    appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
+    measurementId: "G-0CLV0PR5V2"
+  };
 
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const auth = getAuth(app);
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const auth = getAuth(app);
 
-    const status = document.getElementById("status");
+  const status = document.getElementById("status");
 
-    // LOGIN
-    document.getElementById("emailLogin").onclick = () => {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+  // EMAIL LOGIN
+  document.getElementById("emailLogin").onclick = () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
 
-      signInWithEmailAndPassword(auth, email, pass)
-      .then(() => {
-        window.location = "account.html";
-      })
+    signInWithEmailAndPassword(auth, email, pass)
+      .then(() => window.location.href = "account.html")
       .catch(err => status.innerText = err.message);
-    };
+  };
 
-    // SIGNUP
-    document.getElementById("signup").onclick = () => {
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
+  // SIGNUP
+  document.getElementById("signup").onclick = () => {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
 
-      createUserWithEmailAndPassword(auth, email, pass)
-      .then(() => {
-        window.location = "account.html";
-      })
+    createUserWithEmailAndPassword(auth, email, pass)
+      .then(() => window.location.href = "account.html")
       .catch(err => status.innerText = err.message);
-    };
+  };
 
-    // GOOGLE LOGIN
-    document.getElementById("googleLogin").onclick = () => {
-      const provider = new GoogleAuthProvider();
+  // GOOGLE LOGIN (FULLY FIXED)
+  document.getElementById("googleLogin").onclick = async () => {
+    const provider = new GoogleAuthProvider();
 
-      signInWithPopup(auth, provider)
-      .then(() => {
-        window.location = "account.html";
-      })
-      .catch(err => status.innerText = err.message);
-    };
-  </script>
+    try {
+      await signInWithPopup(auth, provider);
+
+      // Hard redirect fallback (fixes GitHub Pages popup issues)
+      setTimeout(() => {
+        window.location.href = "account.html";
+      }, 300);
+
+    } catch (err) {
+      status.innerText = err.message;
+    }
+  };
+
+  // *** AUTO-REDIRECT IF ALREADY LOGGED IN (FIXES popup promise bug) ***
+  onAuthStateChanged(auth, user => {
+    if (user) window.location.href = "account.html";
+  });
+
+</script>
 </body>
 </html>
