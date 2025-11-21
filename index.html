@@ -1,70 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Login</title>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
-
-  <style>
-    body { 
-      font-family: sans-serif; 
-      max-width: 480px; 
-      margin: 40px auto; 
-      text-align: center;
-    }
-    input { width: 80%; padding: 10px; font-size: 16px; }
-    button { padding: 10px 20px; margin: 8px; font-size: 16px; }
-  </style>
+  <title>Econostrats Login</title>
 </head>
 <body>
-  <h2>Login</h2>
+  <h1>Sign In</h1>
+  <button id="loginBtn">Sign in with Google</button>
 
-  <input id="email" placeholder="Email"><br><br>
-  <input id="password" type="password" placeholder="Password"><br><br>
-
-  <button onclick="login()">Login</button>
-  <button onclick="signup()">Sign Up</button>
-  <button onclick="googleLogin()">Login With Google</button>
-
-<script>
-  // FIREBASE CONFIG
-  const firebaseConfig = {
-    apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
-    authDomain: "econostrats-5a73a.firebaseapp.com",
-    projectId: "econostrats-5a73a",
-    storageBucket: "econostrats-5a73a.firebasestorage.app",
-    messagingSenderId: "766599325060",
-    appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
-    measurementId: "G-0CLV0PR5V2"
-  };
-
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const provider = new firebase.auth.GoogleAuthProvider();
-
-  // If logged in → redirect
-  auth.onAuthStateChanged(user => {
-    if (user) window.location.href = "home.html";
-  });
-
-  function login() {
-    auth.signInWithEmailAndPassword(email.value, password.value)
-      .catch(err => alert(err.message));
-  }
-
-  function signup() {
-    auth.createUserWithEmailAndPassword(email.value, password.value)
-      .catch(err => alert(err.message));
-  }
-
-  function googleLogin() {
-    auth.signInWithPopup(provider)
-      .catch(err => alert(err.message));
-  }
-</script>
-
+  <script type="module" src="auth.js"></script>
 </body>
 </html>
