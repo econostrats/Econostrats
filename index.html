@@ -4,15 +4,19 @@
   <title>Econostrats Login</title>
 </head>
 <body>
-  <h1>Sign In</h1>
+  <h1>Sign In / Sign Up</h1>
 
-  <button id="loginBtn">Sign in with Google</button>
+  <input id="email" placeholder="Email" type="email"><br><br>
+  <input id="password" placeholder="Password" type="password"><br><br>
+  <button id="emailLoginBtn">Login with Email</button>
+  <button id="emailSignupBtn">Sign Up with Email</button><br><br>
 
-  <!-- Firebase Libraries -->
+  <button id="googleBtn">Sign in with Google</button>
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
 
-  <!-- Your Auth Logic -->
   <script src="auth.js"></script>
 </body>
 </html>
