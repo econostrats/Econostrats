@@ -8,9 +8,14 @@
   <p id="userEmail"></p>
   <button id="logoutBtn">Log Out</button>
 
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js"></script>
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import {
+      getAuth,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
       authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -20,10 +25,11 @@
       appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
       measurementId: "G-0CLV0PR5V2"
     };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
-    auth.onAuthStateChanged(user => {
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, user => {
       if (!user) {
         window.location.href = "index.html";
       } else {
@@ -31,9 +37,7 @@
       }
     });
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      auth.signOut();
-    });
+    document.getElementById("logoutBtn").onclick = () => signOut(auth);
   </script>
 </body>
 </html>
