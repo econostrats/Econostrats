@@ -26,18 +26,21 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// Force Google to always ask for account selection
+provider.setCustomParameters({ prompt: 'select_account' });
+
+// Use session-only persistence
+setPersistence(auth, browserSessionPersistence);
+
 // Elements
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const errorMsg = document.getElementById("errorMsg");
 
-// Helper to show error
+// Helper to show errors
 function showError(msg) {
   if (errorMsg) errorMsg.textContent = msg;
 }
-
-// Use session-only persistence
-setPersistence(auth, browserSessionPersistence);
 
 // Redirect if logged in
 onAuthStateChanged(auth, user => {
@@ -46,7 +49,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// Google Sign-In
+// GOOGLE SIGN-IN
 document.getElementById("googleBtn").addEventListener("click", async () => {
   showError("");
   try {
@@ -56,7 +59,7 @@ document.getElementById("googleBtn").addEventListener("click", async () => {
   }
 });
 
-// Email Login
+// EMAIL LOGIN
 document.getElementById("emailLoginBtn").addEventListener("click", async () => {
   showError("");
   const email = emailInput.value.trim();
@@ -69,7 +72,7 @@ document.getElementById("emailLoginBtn").addEventListener("click", async () => {
   }
 });
 
-// Email Signup
+// EMAIL SIGNUP
 document.getElementById("emailSignupBtn").addEventListener("click", async () => {
   showError("");
   const email = emailInput.value.trim();
