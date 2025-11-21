@@ -1,4 +1,13 @@
-// Your Firebase config
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
   authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -9,54 +18,38 @@ const firebaseConfig = {
   measurementId: "G-0CLV0PR5V2"
 };
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
-const provider = new firebase.auth.GoogleAuthProvider();
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
+// --- GOOGLE LOGIN ---
 document.getElementById("googleBtn").addEventListener("click", () => {
-  auth.signInWithPopup(provider)
-    .then(result => {
-      console.log("Google sign-in success:", result.user.email);
-      window.location.href = "game.html";
-    })
-    .catch(error => {
-      console.error("Google login error:", error);
-      alert("Google login failed: " + error.message);
-    });
+  signInWithPopup(auth, provider)
+    .then(() => window.location.href = "game.html")
+    .catch(err => alert(err.message));
 });
 
+// --- EMAIL LOGIN ---
 document.getElementById("emailLoginBtn").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
-  auth.signInWithEmailAndPassword(email, pass)
-    .then(user => {
-      console.log("Email login success:", user.user.email);
-      window.location.href = "game.html";
-    })
-    .catch(error => {
-      console.error("Email login error:", error);
-      alert("Login failed: " + error.message);
-    });
+  const email = email.value;
+  const pass = password.value;
+
+  signInWithEmailAndPassword(auth, email, pass)
+    .then(() => window.location.href = "game.html")
+    .catch(err => alert(err.message));
 });
 
+// --- EMAIL SIGNUP ---
 document.getElementById("emailSignupBtn").addEventListener("click", () => {
-  const email = document.getElementById("email").value;
-  const pass = document.getElementById("password").value;
-  auth.createUserWithEmailAndPassword(email, pass)
-    .then(user => {
-      console.log("Signup success:", user.user.email);
-      window.location.href = "game.html";
-    })
-    .catch(error => {
-      console.error("Signup error:", error);
-      alert("Signup failed: " + error.message);
-    });
+  const email = email.value;
+  const pass = password.value;
+
+  createUserWithEmailAndPassword(auth, email, pass)
+    .then(() => window.location.href = "game.html")
+    .catch(err => alert(err.message));
 });
 
-// Redirect if already signed in
-auth.onAuthStateChanged(user => {
-  if (user) {
-    window.location.href = "game.html";
-  }
+// Redirect if already logged in
+onAuthStateChanged(auth, (user) => {
+  if (user) window.location.href = "game.html";
 });
