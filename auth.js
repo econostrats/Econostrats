@@ -5,10 +5,12 @@ import {
   signInWithPopup,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  onAuthStateChanged
+  onAuthStateChanged,
+  setPersistence,
+  browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
-// Firebase configuration
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
   authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -29,22 +31,26 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const errorMsg = document.getElementById("errorMsg");
 
-// Redirect if already signed in
-onAuthStateChanged(auth, user => {
-  if (user) window.location.href = "game.html";
-});
-
-// Helper: display error safely
+// Show error helper
 function showError(msg) {
   if (errorMsg) errorMsg.textContent = msg;
 }
+
+// Persist login only for session (so logout fully works)
+setPersistence(auth, browserSessionPersistence);
+
+// Redirect if already logged in
+onAuthStateChanged(auth, user => {
+  if (user && !window.location.hash.includes("loggedOut")) {
+    window.location.href = "game.html";
+  }
+});
 
 // GOOGLE SIGN-IN
 document.getElementById("googleBtn").addEventListener("click", async () => {
   showError("");
   try {
     await signInWithPopup(auth, provider);
-    // Redirect handled by onAuthStateChanged
   } catch (err) {
     showError(err.message);
   }
@@ -59,7 +65,6 @@ document.getElementById("emailLoginBtn").addEventListener("click", async () => {
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    // Redirect handled by onAuthStateChanged
   } catch (err) {
     showError(err.message);
   }
@@ -74,7 +79,6 @@ document.getElementById("emailSignupBtn").addEventListener("click", async () => 
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
-    // Redirect handled by onAuthStateChanged
   } catch (err) {
     showError(err.message);
   }
