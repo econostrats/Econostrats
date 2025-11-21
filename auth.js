@@ -19,10 +19,12 @@ const firebaseConfig = {
   measurementId: "G-0CLV0PR5V2"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+// Elements
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const errorMsg = document.getElementById("errorMsg");
@@ -34,42 +36,53 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-// Google Sign-In
+// GOOGLE SIGN-IN
 document.getElementById("googleBtn").addEventListener("click", async () => {
+  if (!errorMsg) return;
   errorMsg.textContent = "";
   try {
     await signInWithPopup(auth, provider);
-    // onAuthStateChanged will handle redirect
+    // onAuthStateChanged handles redirect
   } catch (err) {
     errorMsg.textContent = err.message;
   }
 });
 
-// Email Login
+// EMAIL LOGIN
 document.getElementById("emailLoginBtn").addEventListener("click", async () => {
+  if (!errorMsg) return;
   errorMsg.textContent = "";
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  if (!email || !password) return errorMsg.textContent = "Enter email and password.";
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email || !password) {
+    errorMsg.textContent = "Enter both email and password.";
+    return;
+  }
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged will handle redirect
+    // onAuthStateChanged handles redirect
   } catch (err) {
     errorMsg.textContent = err.message;
   }
 });
 
-// Email Signup
+// EMAIL SIGNUP
 document.getElementById("emailSignupBtn").addEventListener("click", async () => {
+  if (!errorMsg) return;
   errorMsg.textContent = "";
-  const email = emailInput.value;
-  const password = passwordInput.value;
-  if (!email || !password) return errorMsg.textContent = "Enter email and password.";
+
+  const email = emailInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!email || !password) {
+    errorMsg.textContent = "Enter both email and password.";
+    return;
+  }
 
   try {
     await createUserWithEmailAndPassword(auth, email, password);
-    // onAuthStateChanged will handle redirect
+    // onAuthStateChanged handles redirect
   } catch (err) {
     errorMsg.textContent = err.message;
   }
