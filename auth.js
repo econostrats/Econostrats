@@ -1,12 +1,4 @@
-// Firebase imports
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { 
-  getAuth, 
-  GoogleAuthProvider, 
-  signInWithPopup 
-} from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-
-// Your Firebase config
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
   authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -17,20 +9,21 @@ const firebaseConfig = {
   measurementId: "G-0CLV0PR5V2"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+// Init
+firebase.initializeApp(firebaseConfig);
 
-// When user clicks login
-document.getElementById("loginBtn").onclick = () => {
-  signInWithPopup(auth, provider)
+const auth = firebase.auth();
+const provider = new firebase.auth.GoogleAuthProvider();
+
+// Button handler
+document.getElementById("loginBtn").addEventListener("click", () => {
+  auth.signInWithPopup(provider)
     .then((result) => {
-      console.log("Signed in as", result.user.email);
-      window.location.href = "game.html";   // go to game page
+      console.log("Signed in:", result.user.email);
+      window.location.href = "game.html";  // Redirect after login
     })
     .catch((error) => {
       console.error("Login error:", error);
-      alert("Login failed. Check console.");
+      alert("Login failed.");
     });
-};
+});
