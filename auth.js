@@ -22,34 +22,42 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// --- GOOGLE LOGIN ---
+// GOOGLE SIGN-IN
 document.getElementById("googleBtn").addEventListener("click", () => {
   signInWithPopup(auth, provider)
-    .then(() => window.location.href = "game.html")
-    .catch(err => alert(err.message));
+    .then(() => {
+      window.location.href = "game.html";
+    })
+    .catch(err => alert(err));
 });
 
-// --- EMAIL LOGIN ---
+// EMAIL LOGIN
 document.getElementById("emailLoginBtn").addEventListener("click", () => {
-  const email = email.value;
-  const pass = password.value;
-
-  signInWithEmailAndPassword(auth, email, pass)
-    .then(() => window.location.href = "game.html")
-    .catch(err => alert(err.message));
+  signInWithEmailAndPassword(
+    auth,
+    document.getElementById("email").value,
+    document.getElementById("password").value
+  )
+    .then(() => {
+      window.location.href = "game.html";
+    })
+    .catch(err => alert(err));
 });
 
-// --- EMAIL SIGNUP ---
+// EMAIL SIGNUP
 document.getElementById("emailSignupBtn").addEventListener("click", () => {
-  const email = email.value;
-  const pass = password.value;
-
-  createUserWithEmailAndPassword(auth, email, pass)
-    .then(() => window.location.href = "game.html")
-    .catch(err => alert(err.message));
+  createUserWithEmailAndPassword(
+    auth,
+    document.getElementById("email").value,
+    document.getElementById("password").value
+  )
+    .then(() => {
+      window.location.href = "game.html";
+    })
+    .catch(err => alert(err));
 });
 
-// Redirect if already logged in
-onAuthStateChanged(auth, (user) => {
+// AUTO-REDIRECT WHEN SIGNED IN
+onAuthStateChanged(auth, user => {
   if (user) window.location.href = "game.html";
 });
