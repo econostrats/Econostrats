@@ -1,10 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Game</title>
+  <title>Econostrats Game</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    button { padding: 8px 12px; margin-top: 10px; }
+  </style>
 </head>
 <body>
-  <h1>Welcome to the Game!</h1>
-  <p>You are logged in.</p>
+  <h1>Game Page</h1>
+  <p id="userEmail"></p>
+  <button id="logoutBtn">Log Out</button>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import {
+      getAuth,
+      signOut,
+      onAuthStateChanged
+    } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
+      authDomain: "econostrats-5a73a.firebaseapp.com",
+      projectId: "econostrats-5a73a",
+      storageBucket: "econostrats-5a73a.firebasestorage.app",
+      messagingSenderId: "766599325060",
+      appId: "1:766599325060:web:fe589fe5fc7c60c09229d1",
+      measurementId: "G-0CLV0PR5V2"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const userEmail = document.getElementById("userEmail");
+
+    // Check if logged in
+    onAuthStateChanged(auth, user => {
+      if (!user) {
+        // Add hash to avoid redirect loop
+        window.location.href = "index.html#loggedOut";
+      } else {
+        userEmail.textContent = "Logged in as: " + user.email;
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "index.html#loggedOut";
+    });
+  </script>
 </body>
 </html>
