@@ -31,22 +31,22 @@ const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const errorMsg = document.getElementById("errorMsg");
 
-// Show error helper
+// Helper to show error
 function showError(msg) {
   if (errorMsg) errorMsg.textContent = msg;
 }
 
-// Persist login only for session (so logout fully works)
+// Use session-only persistence
 setPersistence(auth, browserSessionPersistence);
 
-// Redirect if already logged in
+// Redirect if logged in
 onAuthStateChanged(auth, user => {
   if (user && !window.location.hash.includes("loggedOut")) {
     window.location.href = "game.html";
   }
 });
 
-// GOOGLE SIGN-IN
+// Google Sign-In
 document.getElementById("googleBtn").addEventListener("click", async () => {
   showError("");
   try {
@@ -56,13 +56,12 @@ document.getElementById("googleBtn").addEventListener("click", async () => {
   }
 });
 
-// EMAIL LOGIN
+// Email Login
 document.getElementById("emailLoginBtn").addEventListener("click", async () => {
   showError("");
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
   if (!email || !password) return showError("Enter both email and password.");
-
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
@@ -70,13 +69,12 @@ document.getElementById("emailLoginBtn").addEventListener("click", async () => {
   }
 });
 
-// EMAIL SIGNUP
+// Email Signup
 document.getElementById("emailSignupBtn").addEventListener("click", async () => {
   showError("");
   const email = emailInput.value.trim();
   const password = passwordInput.value.trim();
   if (!email || !password) return showError("Enter both email and password.");
-
   try {
     await createUserWithEmailAndPassword(auth, email, password);
   } catch (err) {
