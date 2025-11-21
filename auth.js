@@ -8,6 +8,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
   authDomain: "econostrats-5a73a.firebaseapp.com",
@@ -22,42 +23,54 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-// GOOGLE SIGN-IN
-document.getElementById("googleBtn").addEventListener("click", () => {
-  signInWithPopup(auth, provider)
-    .then(() => {
-      window.location.href = "game.html";
-    })
-    .catch(err => alert(err));
-});
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const errorMsg = document.getElementById("errorMsg");
 
-// EMAIL LOGIN
-document.getElementById("emailLoginBtn").addEventListener("click", () => {
-  signInWithEmailAndPassword(
-    auth,
-    document.getElementById("email").value,
-    document.getElementById("password").value
-  )
-    .then(() => {
-      window.location.href = "game.html";
-    })
-    .catch(err => alert(err));
-});
-
-// EMAIL SIGNUP
-document.getElementById("emailSignupBtn").addEventListener("click", () => {
-  createUserWithEmailAndPassword(
-    auth,
-    document.getElementById("email").value,
-    document.getElementById("password").value
-  )
-    .then(() => {
-      window.location.href = "game.html";
-    })
-    .catch(err => alert(err));
-});
-
-// AUTO-REDIRECT WHEN SIGNED IN
+// Redirect if already signed in
 onAuthStateChanged(auth, user => {
-  if (user) window.location.href = "game.html";
+  if (user) {
+    window.location.href = "game.html";
+  }
+});
+
+// Google Sign-In
+document.getElementById("googleBtn").addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  try {
+    await signInWithPopup(auth, provider);
+    // onAuthStateChanged will handle redirect
+  } catch (err) {
+    errorMsg.textContent = err.message;
+  }
+});
+
+// Email Login
+document.getElementById("emailLoginBtn").addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  if (!email || !password) return errorMsg.textContent = "Enter email and password.";
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    // onAuthStateChanged will handle redirect
+  } catch (err) {
+    errorMsg.textContent = err.message;
+  }
+});
+
+// Email Signup
+document.getElementById("emailSignupBtn").addEventListener("click", async () => {
+  errorMsg.textContent = "";
+  const email = emailInput.value;
+  const password = passwordInput.value;
+  if (!email || !password) return errorMsg.textContent = "Enter email and password.";
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+    // onAuthStateChanged will handle redirect
+  } catch (err) {
+    errorMsg.textContent = err.message;
+  }
 });
