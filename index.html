@@ -1,211 +1,149 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Trade Market</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  
   <style>
     body {
-      background: #0a0f2c;
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #1e293b, #1f2937);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
       color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-
-    input, button {
-      padding: 12px;
-      margin: 6px;
-      border-radius: 10px;
-      border: none;
-      font-size: 16px;
-    }
-
-    input {
-      width: 250px;
-    }
-
-    button {
-      background: linear-gradient(135deg, #3a2eff, #00ffaa);
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button:hover {
-      transform: scale(1.05);
     }
 
     .card {
-      background: #131942;
-      border-radius: 15px;
-      padding: 15px;
-      margin: 10px auto;
-      width: 90%;
-      max-width: 500px;
-      box-shadow: 0 0 15px rgba(0,0,0,.5);
+      background: #111827;
+      padding: 30px;
+      border-radius: 20px;
+      width: 350px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      text-align: center;
     }
 
-    .offer {
-      border: 1px solid #00ffaa;
-      padding: 10px;
-      border-radius: 10px;
-      margin: 8px;
+    h2 {
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #4ade80, #60a5fa, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    #market { display: none; }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 12px;
+      border: none;
+      background: #1f2937;
+      color: white;
+      outline: none;
+      font-size: 14px;
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(90deg, #4ade80, #60a5fa, #a855f7);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 15px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    }
+
+    .google-btn {
+      background: #1f2937;
+      margin-top: 15px;
+      border: 1px solid #374151;
+    }
+
+    .google-btn:hover {
+      background: #374151;
+    }
+
+    #error {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #f87171;
+    }
   </style>
 </head>
 <body>
 
-<h1>⚡ Trade Market</h1>
-
-<!-- LOGIN -->
-<div id="login" class="card">
-  <h3>Login / Signup</h3>
-  <input id="email" placeholder="Email"><br>
-  <input id="username" placeholder="Username"><br>
-  <input id="userid" placeholder="User ID (make one)"><br>
-  <button onclick="login()">Login / Create</button>
-  <p id="loginStatus"></p>
-</div>
-
-<!-- MARKET -->
-<div id="market">
-
   <div class="card">
-    <h3>Welcome, <span id="userName"></span></h3>
-    <p>Balance: <b id="userBalance">0</b></p>
-    <button onclick="logout()">Logout</button>
+    <h2>Welcome Back</h2>
+    
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button id="loginBtn">Login</button>
+    <button id="signupBtn">Create Account</button>
+    <button class="google-btn" id="googleBtn">Continue with Google</button>
+
+    <p id="error"></p>
   </div>
 
-  <div class="card">
-    <h3>Create Offer</h3>
-    <input id="item" placeholder="Item name">
-    <input id="price" type="number" placeholder="Price">
-    <button onclick="createOffer()">Post Offer</button>
-  </div>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js";
+    import {
+      getAuth,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup
+    } from "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js";
 
-  <div class="card">
-    <h3>Market Offers</h3>
-    <div id="offers"></div>
-  </div>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDfgiRa-J48wktEE6Tg4YrcqPTg-1ztTpk",
+      authDomain: "econostrats-5a73a.firebaseapp.com",
+      projectId: "econostrats-5a73a",
+      storageBucket: "econostrats-5a73a.firebasestorage.app",
+      messagingSenderId: "766599325060",
+      appId: "1:766599325060:web:fe589fe5fc7c60c09229d1"
+    };
 
-</div>
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-<script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzd6n8gRLEOZX8X7j3oNGw_ZRgd5IHzYjIQuTUC9ZXvswSaADntZbYJ7WTFhDQzbLHELA/exec";
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const errorText = document.getElementById("error");
 
-let currentUser = null;
+    document.getElementById("loginBtn").onclick = () => {
+      signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+        .then(() => window.location.href = "dashboard.html")
+        .catch(err => errorText.textContent = err.message);
+    };
 
-function login() {
-  const email = document.getElementById("email").value;
-  const username = document.getElementById("username").value;
-  const userId = document.getElementById("userid").value;
+    document.getElementById("signupBtn").onclick = () => {
+      createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+        .then(() => window.location.href = "dashboard.html")
+        .catch(err => errorText.textContent = err.message);
+    };
 
-  if (!email || !username || !userId) {
-    alert("Fill in all fields");
-    return;
-  }
-
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "createUser",
-      email,
-      username,
-      userId
-    })
-  }).then(() => loadUser(userId));
-}
-
-function loadUser(userId) {
-  fetch(API_URL + "?action=getUser&userId=" + userId)
-    .then(res => res.json())
-    .then(user => {
-      if (user.error) {
-        document.getElementById("loginStatus").innerText = "User not found";
-        return;
-      }
-
-      currentUser = user;
-
-      document.getElementById("login").style.display = "none";
-      document.getElementById("market").style.display = "block";
-
-      document.getElementById("userName").innerText = user.username;
-      document.getElementById("userBalance").innerText = user.value;
-
-      loadOffers();
-    });
-}
-
-function loadOffers() {
-  fetch(API_URL + "?action=getOffers")
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("offers");
-      container.innerHTML = "";
-
-      data.forEach(o => {
-        const div = document.createElement("div");
-        div.className = "offer";
-
-        div.innerHTML = `
-          <p><b>${o.item}</b></p>
-          <p>Price: ${o.price}</p>
-          <p>Seller: ${o.sellerUsername}</p>
-          <button onclick="acceptOffer('${o.offerId}')">Accept</button>
-        `;
-
-        container.appendChild(div);
-      });
-    });
-}
-
-function createOffer() {
-  const item = document.getElementById("item").value;
-  const price = parseInt(document.getElementById("price").value);
-
-  if (!item || !price) {
-    alert("Missing fields");
-    return;
-  }
-
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "createOffer",
-      item,
-      price,
-      sellerId: currentUser.userId,
-      sellerUsername: currentUser.username
-    })
-  }).then(() => loadOffers());
-}
-
-function acceptOffer(offerId) {
-  fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      action: "acceptOffer",
-      offerId,
-      buyerId: currentUser.userId
-    })
-  })
-  .then(res => res.json())
-  .then(resp => {
-    alert(JSON.stringify(resp));
-    loadUser(currentUser.userId);
-  });
-}
-
-function logout() {
-  location.reload();
-}
-</script>
-
+    document.getElementById("googleBtn").onclick = () => {
+      signInWithPopup(auth, provider)
+        .then(() => window.location.href = "dashboard.html")
+        .catch(err => errorText.textContent = err.message);
+    };
+  </script>
 </body>
 </html>
